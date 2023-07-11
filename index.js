@@ -1,14 +1,12 @@
-const request = require('request');
+const axios = require('axios');
 const fs = require('fs');
 
 function numGen() {
-  const startNum = 27965; //17315
-  const endNum = 39000; //27965
-  const delayMs = 100; // Delay in milliseconds (adjust as needed)
+  const startNum = 27965;
+  const endNum = 39000;
+  const delayMs = 100;
 
   const options = {
-    method: 'GET',
-    url: '',
     headers: {}
   };
 
@@ -17,22 +15,24 @@ function numGen() {
   function makeRequest() {
     options.url = `https://ahiva.correo.com.uy/servicioConsultaTntIps-ws/seguimientoEnvios/sucursal?codigoSucursal=${counter}`;
 
-    request(options, function (error, response) {
-      if (error) throw new Error(error);
+    axios.get(options.url, options)
+      .then(response => {
+        const responseBody = response.data + " " + counter + '\n';
 
-      const responseBody = response.body + " " +  counter + '\n' ; // Append a newline character
+        fs.appendFile('promises.json', responseBody, function (err) {
+          if (err) throw new Error(err);
+          console.log(`Response saved for counter ${counter}`);
+        });
 
-      fs.appendFile('test.json', responseBody, function (err) {
-        if (err) throw new Error(err);
-        console.log(`Response saved for counter ${counter}`);
+        counter++;
+
+        if (counter <= endNum) {
+          setTimeout(makeRequest, delayMs);
+        }
+      })
+      .catch(error => {
+        throw new Error(error);
       });
-
-      counter++;
-
-      if (counter <= endNum) {
-        setTimeout(makeRequest, delayMs);
-      }
-    });
   }
 
   makeRequest();
