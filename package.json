@@ -1,0 +1,18 @@
+{
+  "name": "locationmapper",
+  "version": "1.0.0",
+  "description": "wardialer to find all uruguayan mail locations",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/Wikidani/locationMapper"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.88.2"
+  }
+}
