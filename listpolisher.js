@@ -1,41 +1,18 @@
 const fs = require('fs');
 
-const filePath = 'places.json';
+function processFile(filePath) {
+  const lines = fs.readFileSync(filePath, 'utf-8').split('\n');
 
-fs.readFile(filePath, 'utf8', (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
+  const updatedLines = lines.filter(line => !line.includes('[""]'));
 
-  // Split the file content into an array of lines
-  const lines = data.split('\n');
+  const updatedContent = updatedLines.join('\n');
 
-  // Process each line and convert it into a JSON object
-  const jsonArray = lines.map(line => {
-    // Remove extra whitespace from the line
-    const trimmedLine = line.trim();
+  fs.writeFileSync(filePath, updatedContent, 'utf-8');
 
-    // Extract the values from the line
-    const [name, value] = trimmedLine.split(' ');
+  console.log(`File '${filePath}' processed successfully.`);
+}
 
-    // Create an object
-    return {
-      name: name.replace(/[""]/g, '').trim(),
-      value: parseInt(value)
-    };
-  });
+// Provide the file path as a variable
+const filePath = 'test.json'; // Replace with the actual file path
 
-  // Convert the array to JSON
-  const jsonString = JSON.stringify(jsonArray, null, 2);
-
-  // Write the resulting JSON to a new file
-  const outputFilePath = 'a.json';
-  fs.writeFile(outputFilePath, jsonString, 'utf8', err => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    console.log('JSON file created successfully!');
-  });
-});
+processFile(filePath);
